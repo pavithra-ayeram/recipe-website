@@ -1,2 +1,1 @@
-# recipe-website
- A Recipe Management System
+# Recipe Management System
