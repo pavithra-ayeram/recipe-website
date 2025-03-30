@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const form = document.querySelector("form");
     const emailInput = document.getElementById("email");
     const passwordInput = document.getElementById("password");
+    const nameInput = document.getElementById("name"); // Only for signup
     const errorContainer = document.createElement("div");
 
     errorContainer.classList.add("error-messages");
@@ -11,6 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         errorContainer.innerHTML = "";
         let isValid = true;
+
+        if (nameInput && nameInput.value.trim().length < 3) {
+            showError("Name must be at least 3 characters.", nameInput);
+            isValid = false;
+        } else if (nameInput) {
+            setValid(nameInput);
+        }
 
         if (!validateEmail(emailInput.value)) {
             showError("Please enter a valid email address.", emailInput);
@@ -27,9 +35,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (isValid) {
-            form.submit();
+            alert("Form submitted successfully! (Backend will be connected later)");
+            form.reset();
         }
     });
+
+    // Live validation
+    if (nameInput) {
+        nameInput.addEventListener("input", function () {
+            validateInput(nameInput, nameInput.value.trim().length >= 3);
+        });
+    }
 
     emailInput.addEventListener("input", function () {
         validateInput(emailInput, validateEmail(emailInput.value));
