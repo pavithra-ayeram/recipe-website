@@ -153,7 +153,6 @@ input:focus {
 }
 
 button {
-    
     padding: 12px;
     background: var(--primary-color);
     color: white;
@@ -265,3 +264,14 @@ input.valid {
     margin: 5px 0;
 }
 
+label {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+input, textarea {
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
