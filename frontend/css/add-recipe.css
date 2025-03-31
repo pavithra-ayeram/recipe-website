@@ -191,3 +191,74 @@ input.invalid, textarea.invalid {
 input.valid, textarea.valid {
     border-color: #4CAF50;
 }
+
+.header-shape {
+    position: absolute;
+    top: -40px;
+    left: -40px;
+    width: 100px;
+    height: 100px;
+    background: var(--highlight-color);
+    border-radius: 50%;
+    opacity: 0.8;
+    box-shadow: var(--shadow);
+}
+
+.footer-shape {
+    position: absolute;
+    bottom: -40px;
+    right: -40px;
+    width: 100px;
+    height: 100px;
+    background: var(--secondary-color);
+    border-radius: 50%;
+    opacity: 0.8;
+    box-shadow: var(--shadow);
+}
+
+/* Frying Pan */
+.frying-pan {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    width: 120px;
+    height: 120px;
+    background: url('../assets/frying_pan_icon.png');
+    background-size: contain;
+    opacity: 0.4;
+}
+
+.salt-shaker {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 120px;
+    height: 120px;
+    background: url('../assets/salt_shaker_icon.png');
+    background-size: contain;
+    opacity: 0.4;
+}
+
+/* Knife */
+.knife {
+    position: absolute;
+    bottom: 30px;
+    left: 40px;
+    width: 100px;
+    height: 100px;
+    background: url('../assets/knife_icon.png');
+    background-size: contain;
+    opacity: 0.4;
+}
+
+/* Carrot */
+.carrot {
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    width: 100px;
+    height: 100px;
+    background: url('../assets/carrot_icon.png');
+    background-size: contain;
+    opacity: 0.4;
+}
