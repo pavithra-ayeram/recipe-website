@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Listing</title>
+    <link rel="stylesheet" href="../css/recipes.css">
+</head>
+<body>
+    <!-- Fixed Header -->
+    <header>
+        <h1 class="page-title">Recipe Listing</h1>
+    </header> 
+    <div class="container">
+        <!-- Sidebar (Filters) -->
+        <div class="sidebar" id="sidebar">
+            <button id="sidebar-toggle" class="sidebar-toggle">
+                ☰ <span class="toggle-text">Toggle</span>
+            </button>
+            <div class="filter-section">
+                <div id="selected-filters">
+                    <!-- Selected Filter Tags will be dynamically added here -->
+                </div>
+
+                <div class="filter-inputs">
+                    <input type="text" id="ingredient-input" placeholder="Type an ingredient..." autocomplete="off">
+                    <button id="add-ingredient">Add Ingredient</button>
+
+                    <input type="text" id="allergen-input" placeholder="Type an allergen..." autocomplete="off">
+                    <button id="avoid-allergen">Avoid Allergen</button>
+
+                    <input type="number" id="calories-filter" placeholder="Max Calories">
+                    <input type="number" id="time-filter" placeholder="Max Cooking Time">
+                </div>
+
+                <div class="apply-filters-container">
+                    <button id="apply-filters">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="main-content">
+            <div id="recipe-results">
+                <!-- Recipe Cards will be dynamically added here -->
+            </div>
+        </div>  
+    </div>
+
+    <script src="../js/recipes.js"></script>
+</body>
+</html>
