@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Ingredient</title>
+    <link rel="stylesheet" href="../css/add-ingred.css">
+</head>
+
+<body>
+    <div class="frying-pan"></div>
+    <div class="salt-shaker"></div>
+    <div class="knife"></div>
+    <div class="carrot"></div>
+
+    <div class="container">
+        <div class="logo-circle">
+            <img src="../assets/logo.png" alt="Recipe Logo">
+        </div>
+
+        <h2>Add a New Ingredient</h2>
+
+        <form id="recipe-form">
+            <label for="Ingredient-name">Ingredient Name:</label>
+            <input type="text" id="ingredient-name" required>
+
+            <label for="Category">Category:</label>
+            <input type="text" id="Category" required>
+
+            <div class="btn-group">
+                <button type="submit" class="btn">Add Ingredient</button>
+            </div>
+        </form>
+
+        <div class="error-messages" id="error-messages"></div>
+
+        <div class="header-shape"></div>
+        <div class="footer-shape"></div>
+    </div>
+
+    <script src="../js/ingred.js"></script>
+</body>
+
+</html>
