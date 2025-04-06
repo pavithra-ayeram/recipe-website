@@ -223,7 +223,7 @@ input.valid, textarea.valid {
     right: 30px;
     width: 120px;
     height: 120px;
-    background: url('../assets/frying_pan_icon.png');
+    background: url('/static/assets/frying_pan_icon.png');
     background-size: contain;
     opacity: 0.4;
 }
@@ -234,7 +234,7 @@ input.valid, textarea.valid {
     left: 30px;
     width: 120px;
     height: 120px;
-    background: url('../assets/salt_shaker_icon.png');
+    background: url('/static/assets/salt_shaker_icon.png');
     background-size: contain;
     opacity: 0.4;
 }
@@ -246,7 +246,7 @@ input.valid, textarea.valid {
     left: 40px;
     width: 100px;
     height: 100px;
-    background: url('../assets/knife_icon.png');
+    background: url('/static/assets/knife_icon.png');
     background-size: contain;
     opacity: 0.4;
 }
@@ -258,7 +258,7 @@ input.valid, textarea.valid {
     right: 50px;
     width: 100px;
     height: 100px;
-    background: url('../assets/carrot_icon.png');
+    background: url('/static/assets/carrot_icon.png');
     background-size: contain;
     opacity: 0.4;
 }

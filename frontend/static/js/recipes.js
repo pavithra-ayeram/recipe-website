@@ -1,3 +1,9 @@
+const token = localStorage.getItem("token");
+if (!token) {
+    alert("Please log in to view recipes.");
+    window.location.href = "login.html";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     fetchRecipes(); // Initial fetch
 
@@ -9,6 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const selectedFiltersDiv = document.getElementById("selected-filters");
     const sidebar = document.getElementById("sidebar");
     const mainContent = document.getElementById("main-content");
+    const caloriesInput = document.getElementById("calories-filter");
+    const timeInput = document.getElementById("time-filter");
 
     // Track selected filters
     let selectedFilters = [];
@@ -81,17 +89,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Fetch filtered recipes
     function fetchRecipes(filters = {}) {
-        let url = "https://your-backend-api.com/recipes";
-        const params = new URLSearchParams(filters).toString();
-        if (params) url += `?${params}`;
-
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                displayRecipes(data); // Display results
-            })
-            .catch(error => console.error("Error fetching recipes:", error));
+        let url = "http://127.0.0.1:8000/api/recipes/";
+        const token = localStorage.getItem("token");
+    
+        // Build query string only for supported filters
+        const queryParams = new URLSearchParams();
+        if (filters.maxCalories) queryParams.append("max_calories", filters.maxCalories);
+        if (filters.maxTime) queryParams.append("max_time", filters.maxTime);
+    
+        if (queryParams.toString()) {
+            url += `?${queryParams.toString()}`;
+        }
+    
+        fetch(url, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 401) {
+                    alert("Unauthorized. Please log in again.");
+                    window.location.href = "login.html";
+                }
+                throw new Error("Failed to fetch recipes.");
+            }
+            return response.json();
+        })
+        .then(data => {
+            displayRecipes(data);
+        })
+        .catch(error => {
+            console.error("Error fetching recipes:", error);
+        });
     }
+    
 
     // Display recipes dynamically
     function displayRecipes(recipes) {
@@ -128,4 +160,44 @@ document.addEventListener("DOMContentLoaded", () => {
         sidebar.classList.toggle("collapsed");
         mainContent.classList.toggle("full-width");
     }
+});
+
+document.getElementById("logout-btn").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+});
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const testBtn = document.getElementById("test-connection");
+
+    testBtn.addEventListener("click", () => {
+        const token = localStorage.getItem("token");
+
+        fetch("http://127.0.0.1:8000/api/recipes/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => {
+            if (res.ok) {
+                console.log("✅ Backend is connected!");
+                return res.json();
+            } else {
+                console.warn("⚠️ Backend responded with status:", res.status);
+            }
+        })
+        .then(data => {
+            if (data) {
+                console.log("📦 Response data:", data);
+                alert("Success! Check console for response.");
+            }
+        })
+        .catch(err => {
+            console.error("❌ Error reaching backend:", err);
+            alert("Connection failed. Check console.");
+        });
+    });
 });
