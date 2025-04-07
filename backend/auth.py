@@ -9,7 +9,7 @@ from . import models, schemas
 from .database import get_db
 
 # Security configuration
-SECRET_KEY = "your-secret-key-here"  # Change this to something secure in production
+SECRET_KEY = "PaDhaNiSa@123"  # Change this to something secure in production
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

@@ -71,10 +71,21 @@ document.addEventListener("DOMContentLoaded", () => {
         selectedFilters.forEach(filter => {
             const tag = document.createElement("div");
             tag.classList.add("filter-tag");
-            tag.innerHTML = `${filter} <span onclick="removeFilterTag('${filter}')">❌</span>`;
+    
+            const textNode = document.createTextNode(filter);
+            const removeBtn = document.createElement("span");
+            removeBtn.textContent = "❌";
+            removeBtn.style.cursor = "pointer";
+            removeBtn.addEventListener("click", () => {
+                removeFilterTag(filter);
+            });
+    
+            tag.appendChild(textNode);
+            tag.appendChild(removeBtn);
             selectedFiltersDiv.appendChild(tag);
         });
     }
+    
 
     // Apply filters when user clicks "Apply Filters"
     document.getElementById("apply-filters").addEventListener("click", () => {

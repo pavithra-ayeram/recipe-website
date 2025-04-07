@@ -1,16 +1,19 @@
 import os 
-from fastapi import FastAPI 
+from fastapi import FastAPI, HTTPException, status, Form, Request, Depends
 from fastapi.staticfiles import StaticFiles 
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from . import models 
 from .database import engine 
 from .routes import router 
-from fastapi import Form, Request
 from backend.routes import router as main_router
 from fastapi.responses import RedirectResponse
 from fastapi.exceptions import RequestValidationError
 from starlette.requests import Request
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from sqlalchemy.orm import Session
+from . import models, database
+from .database import SessionLocal
+from .auth import create_access_token
 
 
 models. Base.metadata.create_all(bind=engine) 
@@ -34,10 +37,50 @@ async def read_index():
 @app.get("/login", response_class=HTMLResponse)
 async def read_login():
     return FileResponse(os.path.join(pages_path, "login.html"))
+
+@app.post("/login")
+def login(payload: models.LoginRequest, db: Session = Depends(database.get_db)):
+    user = db.query(models.User).filter(models.User.email == payload.email).first()
+
+    if user is None or not user.verify_password(payload.password):
+        raise HTTPException(status_code=400, detail="Incorrect email or password")
+
+    access_token = create_access_token(data={"sub": user.email})
+    return {"access_token": access_token, "token_type": "bearer"}
+
 	
 @app.get("/signup", response_class=HTMLResponse) 
 async def read_signup(): 
 	return FileResponse(os.path.join(pages_path, "signup.html")) 
+
+@app.post("/signup", response_class=HTMLResponse)
+async def signup(
+    username: str = Form(...), 
+    password: str = Form(...), 
+    email: str = Form(...),
+    db: Session = Depends(database.get_db)
+):
+    # Check if username or email already exists
+    existing_user = db.query(models.User).filter(
+        (models.User.username == username) | (models.User.email == email)
+    ).first()
+
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Username or email already registered"
+        )
+
+    # Create a new user and set their password
+    new_user = models.User(username=username, email=email)
+    new_user.set_password(password)
+    
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    # Return a success page or redirect
+    return FileResponse(os.path.join(pages_path, "login.html"))
 	
 @app.get("/recipes", response_class=HTMLResponse) 
 async def read_recipes(): 
