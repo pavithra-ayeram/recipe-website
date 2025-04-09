@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Ingredient</title>
-    <link rel="stylesheet" href="../css/add-ingred.css">
+    <link rel="stylesheet" href="/css/add-ingred.css">
 </head>
 
 <body>
@@ -16,20 +16,21 @@
 
     <div class="container">
         <div class="logo-circle">
-            <img src="../assets/logo.png" alt="Recipe Logo">
+            <img src="/assets/logo.png" alt="Recipe Logo">
         </div>
 
         <h2>Add a New Ingredient</h2>
 
         <form id="recipe-form">
-            <label for="Ingredient-name">Ingredient Name:</label>
+            <label for="ingredient-name">Ingredient Name:</label>
             <input type="text" id="ingredient-name" required>
 
-            <label for="Category">Category:</label>
-            <input type="text" id="Category" required>
+            <label for="category">Category:</label>
+            <input type="text" id="category" required>
 
             <div class="btn-group">
                 <button type="submit" class="btn">Add Ingredient</button>
+                <a href="/recipes" class="btn">Back to Recipes</a>
             </div>
         </form>
 
@@ -39,7 +40,8 @@
         <div class="footer-shape"></div>
     </div>
 
-    <script src="../js/ingred.js"></script>
+    <script src="/js/ingred.js"></script>
+    <script src="/js/script.js"></script>
 </body>
 
 </html>

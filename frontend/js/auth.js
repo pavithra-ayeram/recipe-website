@@ -35,8 +35,66 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         if (isValid) {
-            alert("Form submitted successfully! (Backend will be connected later)");
-            form.reset();
+            // Determine if this is a login or signup form
+            const isSignup = !!nameInput;
+            
+            const userData = {
+                email: emailInput.value,
+                password: passwordInput.value
+            };
+            
+            if (isSignup) {
+                userData.username = nameInput.value;
+                
+                // Call signup API
+                fetch('/api/signup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.detail || 'Signup failed');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert("Signup successful! Please log in.");
+                    window.location.href = "/login";
+                })
+                .catch(error => {
+                    showError(error.message, emailInput);
+                });
+            } else {
+                // Call login API
+                fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            throw new Error(data.detail || 'Login failed');
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Store the token in localStorage
+                    localStorage.setItem('token', data.access_token);
+                    window.location.href = "/recipes";
+                })
+                .catch(error => {
+                    showError(error.message, emailInput);
+                });
+            }
         }
     });
 

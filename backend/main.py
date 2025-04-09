@@ -12,7 +12,7 @@ app = FastAPI()
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # React frontend URL
+    allow_origins=["*"],  # Updated to allow any origin for development
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -21,6 +21,6 @@ app.add_middleware(
 # Include routes
 app.include_router(router, prefix="/api")
 
-@app.get("/")
+@app.get("/api")
 def read_root():
-    return {"message": "Welcome to the Recipe API"} 
+    return {"message": "Welcome to the Recipe API"}
