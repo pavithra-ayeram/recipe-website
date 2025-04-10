@@ -132,6 +132,7 @@ label {
 
 .btn {
     width: 100%;
+    max-width: 200px;
     padding: 12px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -144,6 +145,8 @@ label {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    display: block;
 }
 
 .btn:hover {
