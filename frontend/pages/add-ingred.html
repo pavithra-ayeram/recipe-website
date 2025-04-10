@@ -22,16 +22,17 @@
         <h2>Add a New Ingredient</h2>
 
         <form id="recipe-form">
-            <label for="ingredient-name">Ingredient Name:</label>
+            <label for="Ingredient-name">Ingredient Name:</label>
             <input type="text" id="ingredient-name" required>
 
-            <label for="category">Category:</label>
-            <input type="text" id="category" required>
+            <label for="Category">Category:</label>
+            <input type="text" id="Category" required>
 
             <div class="btn-group">
                 <button type="submit" class="btn">Add Ingredient</button>
-                <a href="/recipes" class="btn">Back to Recipes</a>
             </div>
+            <a href="/recipes" class="btn" id="add-ingred">Back to Home</a>
+
         </form>
 
         <div class="error-messages" id="error-messages"></div>
@@ -41,7 +42,6 @@
     </div>
 
     <script src="/js/ingred.js"></script>
-    <script src="/js/script.js"></script>
 </body>
 
 </html>
