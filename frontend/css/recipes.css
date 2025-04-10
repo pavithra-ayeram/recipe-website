@@ -1,4 +1,5 @@
 /* Root Variables */
+
 :root {
     --primary-color: #FF6B6B;
     --primary-hover: #FF9E6B;
@@ -8,10 +9,12 @@
     --secondary-color: #6A67CE;
     --highlight-color: #FFD93D;
     --shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    --tag-bg-color: #fcc3c5; 
+    --tag-bg-color: #fcc3c5;
 }
 
+
 /* General Styles */
+
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
@@ -20,33 +23,47 @@ body {
     color: var(--text-color);
 }
 
+
 /* Container for Layout */
+
 .container {
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
     gap: 20px;
 }
 
-header {
-    text-align: center;
-    color: var(--primary-color);
-    padding: 20px;
-    width: 100%;
+.top-header {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: var(--background-color);
+    width: 100%;
+    height: 60px;
+    background-color: #fde7dd;
     z-index: 1000;
 }
 
-.page-title {
-    margin: 0;
-    font-size: 2rem;
-    font-weight: bold;
-    text-align: center;
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+    padding: 0 20px;
 }
 
+#logout-btn {
+    margin-left: 1200px;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+
 /* Sidebar */
+
 .sidebar {
     width: 300px;
     height: 100vh;
@@ -60,16 +77,22 @@ header {
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    padding: 10px 15px; /* Consistent padding */
+    padding: 10px 15px;
+    /* Consistent padding */
 }
+
 
 /* Collapsed Sidebar */
+
 .sidebar.collapsed {
     width: 60px;
-    padding: 10px 0; /* Reduce unnecessary padding */
+    padding: 10px 0;
+    /* Reduce unnecessary padding */
 }
 
+
 /* Sidebar Toggle Button */
+
 .sidebar-toggle {
     width: 90%;
     background: var(--primary-color);
@@ -87,32 +110,43 @@ header {
     transition: 0.3s;
 }
 
+
 /* Toggle Button Adjustments */
+
 .sidebar.collapsed .toggle-text {
     display: none;
 }
 
+
 /* Center Toggle Button in Collapsed Sidebar */
+
 .sidebar.collapsed .sidebar-toggle {
     justify-content: center;
 }
 
+
 /* Filter Section */
+
 .filter-section {
     display: flex;
     flex-direction: column;
     gap: 15px;
     width: 100%;
-    padding: 20px 10px; /* Reduce padding for better alignment */
+    padding: 20px 10px;
+    /* Reduce padding for better alignment */
     align-items: center;
 }
 
+
 /* Hide Filters when Sidebar is Collapsed */
+
 .sidebar.collapsed .filter-section {
     display: none;
 }
 
+
 /* Selected Filters Tags */
+
 #selected-filters {
     display: flex;
     flex-wrap: wrap;
@@ -120,7 +154,9 @@ header {
     margin-bottom: 20px;
 }
 
+
 /* Tag Style for Ingredients & Dietary Preferences */
+
 .filter-tag {
     background: white;
     padding: 5px 12px;
@@ -129,7 +165,7 @@ header {
     align-items: center;
     gap: 8px;
     font-weight: bold;
-    color: var(--primary-color); 
+    color: var(--primary-color);
     box-shadow: var(--shadow);
 }
 
@@ -139,7 +175,9 @@ header {
     color: var(--primary-color);
 }
 
+
 /* Input Fields & Buttons */
+
 .filter-inputs {
     display: flex;
     flex-direction: column;
@@ -152,7 +190,7 @@ input[type="text"],
 input[type="number"] {
     padding: 10px;
     font-size: 14px;
-    width: 90%; 
+    width: 90%;
     max-width: 250px;
     border: 2px solid var(--primary-color);
     border-radius: 5px;
@@ -160,7 +198,9 @@ input[type="number"] {
     outline: none;
 }
 
+
 /* Apply Filters Button */
+
 .apply-filters-container {
     display: flex;
     justify-content: center;
@@ -173,31 +213,26 @@ button {
     border-radius: 5px;
     cursor: pointer;
     transition: 0.3s;
-    width: 100%; 
+    width: 100%;
     margin: 0 auto;
 }
 
-button#apply-filters, button#avoid-allergen, button#add-ingredient {
-    background-color: var(--primary-color);
-    color: white;
-    font-weight: bold;
-    border: none;
-    width: 90%; 
-    max-width: 200px;
+.main-content .sidebar-toggle {
+    display: none;
 }
 
-.main-content .sidebar-toggle {
-    display: none; 
-}
 
 /* Adjust Main Content */
+
 .main-content {
     transition: margin-left 0.3s ease-in-out;
     margin-left: 350px;
     padding: 20px;
 }
 
+
 /* Recipe Results */
+
 #recipe-results {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -205,7 +240,9 @@ button#apply-filters, button#avoid-allergen, button#add-ingredient {
     margin-top: 20px;
 }
 
+
 /* Recipe Card */
+
 .recipe-card {
     background: var(--card-bg);
     padding: 15px;
@@ -229,4 +266,42 @@ button#apply-filters, button#avoid-allergen, button#add-ingredient {
     height: 150px;
     object-fit: cover;
     border-radius: 5px;
+}
+
+button#apply-filters,
+button#avoid-allergen,
+button#add-ingredient {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    border: none;
+    width: 90%;
+    max-width: 200px;
+    margin-bottom: 10px;
+}
+
+.sidebar.collapsed #add-ingred,
+.sidebar.collapsed #ad-recip {
+    display: none;
+}
+
+.page-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.btn {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: bold;
+    border: none;
+    width: 90%;
+    max-width: 200px;
+    margin-bottom: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
 }
