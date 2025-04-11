@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Recipe</title>
-    <link rel="stylesheet" href="/static/css/add-recipe.css">
+    <link rel="stylesheet" href="/css/add-recipe.css">
 </head>
+
 <body>
     <div class="frying-pan"></div>
     <div class="salt-shaker"></div>
@@ -14,7 +16,7 @@
 
     <div class="container">
         <div class="logo-circle">
-            <img src="/static/assets/logo.png" alt="Recipe Logo">
+            <img src="/assets/logo.png" alt="Recipe Logo">
         </div>
 
         <h2>Add a New Recipe</h2>
@@ -45,6 +47,8 @@
             <div class="btn-group">
                 <button type="submit" class="btn">Add Recipe</button>
             </div>
+            <a href="/recipes" class="btn" id="add-ingred">Back to Home</a>
+
         </form>
 
         <div class="error-messages" id="error-messages"></div>
@@ -53,6 +57,7 @@
         <div class="footer-shape"></div>
     </div>
 
-    <script src="/static/js/recipe-form.js"></script> 
+    <script src="/js/recipe-form.js"></script>
 </body>
+
 </html>

@@ -1,9 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from .database import Base
-from passlib.context import CryptContext
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Association table for recipe-ingredient relationship
 recipe_ingredient = Table(
@@ -17,16 +14,10 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
+    username = Column(String(50), unique=True, index=True)
+    email = Column(String(100), unique=True, index=True)
+    hashed_password = Column(String(100))
     recipes = relationship("Recipe", back_populates="owner")
-
-    def set_password(self, password: str):
-        self.hashed_password = pwd_context.hash(password)
-
-    def verify_password(self, password: str):
-        return pwd_context.verify(password, self.hashed_password)
 
 class Recipe(Base):
     __tablename__ = "recipes"
@@ -45,9 +36,3 @@ class Ingredient(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), unique=True)
     recipes = relationship("Recipe", secondary=recipe_ingredient, back_populates="ingredients") 
-
-from pydantic import BaseModel
-
-class LoginRequest(BaseModel):
-    email: str
-    password: str

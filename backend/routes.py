@@ -1,46 +1,41 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Form
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from typing import List
 from . import models, schemas
-from .models import User
-from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse
 from .database import get_db
 from .auth import get_current_user, create_access_token, verify_password, get_password_hash
-from .schemas import LoginData, SignupData
-from .utils import verify_password, hash_password
-from .database import get_db
 
-router = APIRouter(prefix="/auth")
+router = APIRouter()
 
-# Route for user login
-@router.post("/login")
-async def login_user(data: schemas.UserLogin, db: Session = Depends(get_db)):
-    # Your logic for user authentication goes here
-    user = db.query(models.User).filter(models.User.email == data.email).first()
-    if not user or not verify_password(data.password, user.hashed_password):
-        raise HTTPException(status_code=401, detail="Invalid email or password")
-    
-    # Your token creation logic or redirect can go here
-    return {"access_token": create_access_token(data={"sub": user.email}), "token_type": "bearer"}
-
-
-# Route for user signup
-@router.post("/signup")
-async def signup_user(data: schemas.UserCreate, db: Session = Depends(get_db)):
-    existing_user = db.query(models.User).filter(models.User.email == data.email).first()
-    if existing_user:
+# Authentication routes
+@router.post("/signup", response_model=schemas.User)
+def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.email == user.email).first()
+    if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-
-    new_user = models.User(
-        username=data.username,
-        email=data.email,
-        hashed_password=hash_password(data.password)
+    
+    hashed_password = get_password_hash(user.password)
+    db_user = models.User(
+        email=user.email,
+        username=user.username,
+        hashed_password=hashed_password
     )
-    db.add(new_user)
+    db.add(db_user)
     db.commit()
-    db.refresh(new_user)
+    db.refresh(db_user)
+    return db_user
 
-    return {"message": "User created successfully!"}
+@router.post("/login")
+def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
+    db_user = db.query(models.User).filter(models.User.email == user.email).first()
+    if not db_user or not verify_password(user.password, db_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    access_token = create_access_token(data={"sub": db_user.email})
+    return {"access_token": access_token, "token_type": "bearer"}
 
 # Recipe routes
 @router.post("/recipes/", response_model=schemas.Recipe)
@@ -49,7 +44,6 @@ def create_recipe(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    # Create a new recipe associated with the logged-in user
     db_recipe = models.Recipe(
         title=recipe.title,
         description=recipe.description,
@@ -68,7 +62,6 @@ def read_recipes(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    # Fetch recipes created by the current user
     recipes = db.query(models.Recipe).filter(
         models.Recipe.owner_id == current_user.id
     ).offset(skip).limit(limit).all()
@@ -81,7 +74,6 @@ def create_ingredient(
     db: Session = Depends(get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    # Create a new ingredient
     db_ingredient = models.Ingredient(name=ingredient.name)
     db.add(db_ingredient)
     db.commit()
@@ -94,6 +86,5 @@ def read_ingredients(
     limit: int = 100,
     db: Session = Depends(get_db)
 ):
-    # Fetch all ingredients in the database
     ingredients = db.query(models.Ingredient).offset(skip).limit(limit).all()
-    return ingredients
+    return ingredients 
