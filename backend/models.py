@@ -36,3 +36,11 @@ class Ingredient(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), unique=True)
     recipes = relationship("Recipe", secondary=recipe_ingredient, back_populates="ingredients") 
+
+from pydantic import BaseModel
+
+class UserSignup(BaseModel):
+    username: str
+    email: str
+    password: str
+    

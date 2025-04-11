@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
+import backend.models as models
 
 # Add the parent directory to the path so Python can find the backend modules
 current_dir = os.path.dirname(os.path.abspath(__file__))

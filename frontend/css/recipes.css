@@ -1,5 +1,4 @@
 /* Root Variables */
-
 :root {
     --primary-color: #FF6B6B;
     --primary-hover: #FF9E6B;
@@ -14,7 +13,6 @@
 
 
 /* General Styles */
-
 body {
     font-family: 'Arial', sans-serif;
     margin: 0;
@@ -25,7 +23,6 @@ body {
 
 
 /* Container for Layout */
-
 .container {
     display: flex;
     flex-direction: row;
@@ -63,7 +60,6 @@ body {
 
 
 /* Sidebar */
-
 .sidebar {
     width: 300px;
     height: 100vh;
@@ -83,16 +79,13 @@ body {
 
 
 /* Collapsed Sidebar */
-
 .sidebar.collapsed {
     width: 60px;
     padding: 10px 0;
-    /* Reduce unnecessary padding */
 }
 
 
 /* Sidebar Toggle Button */
-
 .sidebar-toggle {
     width: 90%;
     background: var(--primary-color);
@@ -112,21 +105,18 @@ body {
 
 
 /* Toggle Button Adjustments */
-
 .sidebar.collapsed .toggle-text {
     display: none;
 }
 
 
 /* Center Toggle Button in Collapsed Sidebar */
-
 .sidebar.collapsed .sidebar-toggle {
     justify-content: center;
 }
 
 
 /* Filter Section */
-
 .filter-section {
     display: flex;
     flex-direction: column;
@@ -139,14 +129,12 @@ body {
 
 
 /* Hide Filters when Sidebar is Collapsed */
-
 .sidebar.collapsed .filter-section {
     display: none;
 }
 
 
 /* Selected Filters Tags */
-
 #selected-filters {
     display: flex;
     flex-wrap: wrap;
@@ -156,7 +144,6 @@ body {
 
 
 /* Tag Style for Ingredients & Dietary Preferences */
-
 .filter-tag {
     background: white;
     padding: 5px 12px;
@@ -177,7 +164,6 @@ body {
 
 
 /* Input Fields & Buttons */
-
 .filter-inputs {
     display: flex;
     flex-direction: column;
@@ -200,7 +186,6 @@ input[type="number"] {
 
 
 /* Apply Filters Button */
-
 .apply-filters-container {
     display: flex;
     justify-content: center;
@@ -223,7 +208,6 @@ button {
 
 
 /* Adjust Main Content */
-
 .main-content {
     transition: margin-left 0.3s ease-in-out;
     margin-left: 350px;
@@ -232,7 +216,6 @@ button {
 
 
 /* Recipe Results */
-
 #recipe-results {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -242,7 +225,6 @@ button {
 
 
 /* Recipe Card */
-
 .recipe-card {
     background: var(--card-bg);
     padding: 15px;

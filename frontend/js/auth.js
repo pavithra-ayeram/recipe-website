@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 userData.username = nameInput.value;
                 
                 // Call signup API
-                fetch('/api/signup', {
+                fetch('/signup', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
             } else {
                 // Call login API
-                fetch('/api/login', {
+                fetch('/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
