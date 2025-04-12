@@ -285,7 +285,7 @@ button#add-ingredient:hover {
 }
 
 .sidebar.collapsed #add-ingred,
-.sidebar.collapsed #ad-recip {
+.sidebar.collapsed #add-recipe {
     display: none;
 }
 
