@@ -42,20 +42,50 @@
 
                 <div class="apply-filters-container">
                     <button id="apply-filters">Apply Filters</button>
-
                 </div>
-
             </div>
+
             <a href="/add-ingredient" class="btn" id="add-ingred">Add New Ingredient</a>
             <a href="/add-recipe" class="btn" id="add-recip">Add New Recipe</a>
         </div>
-
-        <!-- Main Content -->
-        <div class="main-content" id="main-content">
-            <div id="recipe-results">
-                <!-- Recipe Cards will be dynamically added here -->
-            </div>
-        </div>
+            <!-- Main Content -->
+            <div class="main-content" id="main-content">
+                <div id="recipe-results" class="recipe-grid">
+                    <!-- Static Recipe Cards with Images -->
+                
+                    <div class="recipe-card">
+                        <img src="/assets/paneer-butter-masala.jpg" alt="Paneer Butter Masala" class="recipe-img">
+                        <h2>Paneer Butter Masala</h2>
+                        <p><strong>Time:</strong> 30 mins, <strong>Serves:</strong> 3, <strong>Devices:</strong> Stove</p>
+                        <p><strong>Ingredients:</strong> Paneer, Butter, Tomato, Spices</p>
+                        <a href="/recipe/R001" class="btn">View Recipe</a>
+                    </div>
+                
+                    <div class="recipe-card">
+                        <img src="/assets/mug-cake.jpg" alt="Chocolate Mug Cake" class="recipe-img">
+                        <h2>Chocolate Mug Cake</h2>
+                        <p><strong>Time:</strong> 5 mins, <strong>Serves:</strong> 1, <strong>Devices:</strong> Microwave</p>
+                        <p><strong>Ingredients:</strong> Flour, Sugar, Milk, Cocoa</p>
+                        <a href="/recipe/R002" class="btn">View Recipe</a>
+                    </div>
+                
+                    <div class="recipe-card">
+                        <img src="/assets/lentil-soup.jpg" alt="Lentil Soup" class="recipe-img">
+                        <h2>Lentil Soup</h2>
+                        <p><strong>Time:</strong> 25 mins, <strong>Serves:</strong> 4, <strong>Devices:</strong> Stove</p>
+                        <p><strong>Ingredients:</strong> Lentils, Carrot, Garlic, Onion</p>
+                        <a href="/recipe/R003" class="btn">View Recipe</a>
+                    </div>
+                
+                    <div class="recipe-card">
+                        <img src="/assets/fruit-salad.jpg" alt="Fruit Salad" class="recipe-img">
+                        <h2>Fruit Salad</h2>
+                        <p><strong>Time:</strong> 0 mins, <strong>Serves:</strong> 2, <strong>Devices:</strong> None</p>
+                        <p><strong>Ingredients:</strong> Apple, Banana, Grapes</p>
+                        <a href="/recipe/R004" class="btn">View Recipe</a>
+                    </div>
+                </div> 
+            </div>           
     </div>
 
     <script src="/js/recipes.js"></script>
