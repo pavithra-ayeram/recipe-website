@@ -15,11 +15,12 @@
         <div class="header-shape"></div>
         <h2>Welcome Back!</h2>
         <p>Log in to explore and save your favorite recipes.</p>
-        <form action="/login" method="POST">
-            <input type="email" placeholder="Email" required>
-            <input type="password" placeholder="Password" required>
+        <form id="login-form">
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <div class="error-messages" style="display: none;"></div>
             <button type="submit" class="btn">Login</button>
-        </form>        
+        </form>       
         <p class="switch">New here? <a href="/signup">Create an account</a></p>
         <div class="footer-shape"></div>
     </div> 

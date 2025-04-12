@@ -6,7 +6,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
-import backend.models as models
 
 # Add the parent directory to the path so Python can find the backend modules
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -22,12 +21,12 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-# Configure CORS
+# Configure CORS - IMPORTANT: Make sure these settings allow your frontend to access the API
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # In production, restrict this to specific domains
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],  # Make sure POST is included
     allow_headers=["*"],
 )
 
@@ -36,8 +35,8 @@ app.mount("/assets", StaticFiles(directory=os.path.join(current_dir, "frontend/a
 app.mount("/css", StaticFiles(directory=os.path.join(current_dir, "frontend/css")), name="css")
 app.mount("/js", StaticFiles(directory=os.path.join(current_dir, "frontend/js")), name="js")
 
-# Include API routes
-app.include_router(router)  # Removed prefix as it's already in the router
+# Include API routes with the correct prefix
+app.include_router(router, prefix="/api")  # Make sure this matches your frontend fetch calls
 
 # Setup templates
 templates = Jinja2Templates(directory=os.path.join(current_dir, "frontend/pages"))
@@ -70,5 +69,5 @@ async def add_ingredient_page(request: Request):
 async def catch_all(request: Request, path: str):
     return templates.TemplateResponse("404.html", {"request": request})
 
-# if __name__ == "__main__":
-#     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)
+if __name__ == "__main__":
+    uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)

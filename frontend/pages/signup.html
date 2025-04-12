@@ -15,12 +15,14 @@
         <div class="header-shape"></div>
         <h2>Join Recipe Hub!</h2>
         <p>Create an account and start saving delicious recipes.</p>
-        <form action="/signup" method="POST">
-            <input type="text" id="name" placeholder="Full Name" required>
+        <form id="signup-form">
+            <input type="text" id="username" placeholder="Username" required>
             <input type="email" id="email" placeholder="Email" required>
             <input type="password" id="password" placeholder="Password" required>
+            <input type="password" id="confirm-password" placeholder="Confirm Password" required>
+            <div class="error-messages" style="display: none;"></div>
             <button type="submit" class="btn">Sign Up</button>
-        </form>        
+        </form>       
         <p class="switch">Already have an account? <a href="/login">Log in</a></p>
         <div class="footer-shape"></div>
     </div>

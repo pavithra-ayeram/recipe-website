@@ -1,146 +1,120 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("form");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const nameInput = document.getElementById("name"); // Only for signup
-    const errorContainer = document.createElement("div");
+// auth.js - Fixed version to handle login and signup form submissions
 
-    errorContainer.classList.add("error-messages");
-    form.appendChild(errorContainer);
-
-    form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        errorContainer.innerHTML = "";
-        let isValid = true;
-
-        if (nameInput && nameInput.value.trim().length < 3) {
-            showError("Name must be at least 3 characters.", nameInput);
-            isValid = false;
-        } else if (nameInput) {
-            setValid(nameInput);
-        }
-
-        if (!validateEmail(emailInput.value)) {
-            showError("Please enter a valid email address.", emailInput);
-            isValid = false;
-        } else {
-            setValid(emailInput);
-        }
-
-        if (passwordInput.value.length < 6) {
-            showError("Password must be at least 6 characters.", passwordInput);
-            isValid = false;
-        } else {
-            setValid(passwordInput);
-        }
-
-        if (isValid) {
-            // Determine if this is a login or signup form
-            const isSignup = !!nameInput;
-            
-            const userData = {
-                email: emailInput.value,
-                password: passwordInput.value
-            };
-            
-            if (isSignup) {
-                userData.username = nameInput.value;
+document.addEventListener('DOMContentLoaded', function() {
+    // Get the current page
+    const currentPage = window.location.pathname;
+    
+    // Handle Login Form
+    if (currentPage.includes('/login')) {
+        const loginForm = document.querySelector('form');
+        
+        if (loginForm) {
+            loginForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
                 
-                // Call signup API
-                fetch('/signup', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(userData)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(data => {
-                            throw new Error(data.detail || 'Signup failed');
-                        });
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Form validation
+                if (!email || !password) {
+                    showError('Please fill in all fields');
+                    return;
+                }
+                
+                try {
+                    // FIXED: Ensure this matches your backend route exactly
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            email: email, 
+                            password: password 
+                        }),
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Store the token
+                        localStorage.setItem('token', data.access_token);
+                        // Redirect to recipes page
+                        window.location.href = '/recipes';
+                    } else {
+                        const errorData = await response.json().catch(() => ({ detail: 'Login failed' }));
+                        showError(errorData.detail || 'Login failed. Please check your credentials.');
                     }
-                    return response.json();
-                })
-                .then(data => {
-                    alert("Signup successful! Please log in.");
-                    window.location.href = "/login";
-                })
-                .catch(error => {
-                    showError(error.message, emailInput);
-                });
-            } else {
-                // Call login API
-                fetch('/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(userData)
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(data => {
-                            throw new Error(data.detail || 'Login failed');
-                        });
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Store the token in localStorage
-                    localStorage.setItem('token', data.access_token);
-                    window.location.href = "/recipes";
-                })
-                .catch(error => {
-                    showError(error.message, emailInput);
-                });
-            }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showError('An error occurred during login. Please try again.');
+                }
+            });
         }
-    });
-
-    // Live validation
-    if (nameInput) {
-        nameInput.addEventListener("input", function () {
-            validateInput(nameInput, nameInput.value.trim().length >= 3);
-        });
     }
-
-    emailInput.addEventListener("input", function () {
-        validateInput(emailInput, validateEmail(emailInput.value));
-    });
-
-    passwordInput.addEventListener("input", function () {
-        validateInput(passwordInput, passwordInput.value.length >= 6);
-    });
-
-    function validateEmail(email) {
-        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return regex.test(email);
+    
+    // Handle Signup Form
+    if (currentPage.includes('/signup')) {
+        const signupForm = document.querySelector('form');
+        
+        if (signupForm) {
+            signupForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm-password')?.value;
+                
+                // Form validation
+                if (!username || !email || !password) {
+                    showError('Please fill in all required fields');
+                    return;
+                }
+                
+                if (confirmPassword && password !== confirmPassword) {
+                    showError('Passwords do not match');
+                    return;
+                }
+                
+                try {
+                    // FIXED: Ensure this matches your backend route exactly
+                    const response = await fetch('/api/signup', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ 
+                            username: username, 
+                            email: email, 
+                            password: password 
+                        }),
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        // Show success message and redirect to login
+                        alert('Registration successful! Please log in.');
+                        window.location.href = '/login';
+                    } else {
+                        const errorData = await response.json().catch(() => ({ detail: 'Registration failed' }));
+                        showError(errorData.detail || 'Registration failed. Please try again.');
+                    }
+                } catch (error) {
+                    console.error('Signup error:', error);
+                    showError('An error occurred during signup. Please try again.');
+                }
+            });
+        }
     }
-
-    function validateInput(input, condition) {
-        if (condition) {
-            setValid(input);
+    
+    // Helper function to show error messages
+    function showError(message) {
+        const errorContainer = document.querySelector('.error-messages');
+        if (errorContainer) {
+            errorContainer.innerHTML = `<div class="error-text">${message}</div>`;
+            errorContainer.style.display = 'block';
         } else {
-            setInvalid(input);
+            alert(message);
         }
-    }
-
-    function showError(message, input) {
-        const error = document.createElement("p");
-        error.textContent = message;
-        error.classList.add("error-text");
-        errorContainer.appendChild(error);
-        setInvalid(input);
-    }
-
-    function setValid(input) {
-        input.classList.remove("invalid");
-        input.classList.add("valid");
-    }
-
-    function setInvalid(input) {
-        input.classList.remove("valid");
-        input.classList.add("invalid");
     }
 });

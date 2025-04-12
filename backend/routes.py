@@ -1,4 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+# Update your routes.py file to ensure it properly handles the login and signup routes
+
+from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from typing import List
 from . import models, schemas
@@ -7,7 +10,7 @@ from .auth import get_current_user, create_access_token, verify_password, get_pa
 
 router = APIRouter()
 
-# Authentication routes
+# Authentication routes - make sure these match the URLs in your frontend code
 @router.post("/signup", response_model=schemas.User)
 def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = db.query(models.User).filter(models.User.email == user.email).first()

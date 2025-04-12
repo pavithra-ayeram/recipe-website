@@ -319,8 +319,75 @@ button#add-ingredient:hover {
     background-color: var(--primary-hover);
     color: white;
 }
-   
-.sidebar.collapsed #add-ingred,
-.sidebar.collapsed #add-recip {
-    display: none;
+
+/* No results message styling */
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px;
+    font-size: 18px;
+    color: #666;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+/* Recipe card hover effect */
+.recipe-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Allergen tags styling */
+.allergen-tag {
+    display: inline-block;
+    background-color: var(--tag-bg-color);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+/* Recipe filter tag animation */
+.filter-tag {
+    transition: background-color 0.3s ease;
+}
+
+.filter-tag:hover {
+    background-color: #ffe8e8;
+}
+
+/* Additional responsive breakpoints */
+@media (max-width: 768px) {
+    .recipe-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 10px;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    .recipe-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1201px) {
+    .recipe-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
