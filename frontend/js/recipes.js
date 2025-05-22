@@ -207,10 +207,10 @@ document.addEventListener("DOMContentLoaded", () => {
             card.className = "recipe-card";
 
             const name = recipe.title || recipe.name || "Untitled";
-            const image = recipe.image || "/assets/default-recipe.jpg";
+            const image = recipe.image || "/assets/default-recipe.png";
             const time = recipe.times || recipe.time || "N/A";
             const serves = recipe.serves || "N/A";
-            const devices = Array.isArray(recipe.devices) ? recipe.devices.join(", ") : "N/A";
+            const devices = recipe.devices || "N/A";
             const ingredients = Array.isArray(recipe.ingredients)
                 ? recipe.ingredients.map(i => (typeof i === "string" ? i : i.name)).join(", ")
                 : "N/A";
@@ -226,6 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p><strong>Serves:</strong> ${serves}</p>
                 <p><strong>Devices:</strong> ${devices}</p>
                 ${allergens ? `<p><strong>Allergens:</strong> ${allergens}</p>` : ""}
+                <a href="/recipe/${recipe.id}" class="btn">View Recipe</a>
             `;
             resultsDiv.appendChild(card);
         });
