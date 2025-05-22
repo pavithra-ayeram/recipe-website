@@ -7,8 +7,9 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi import FastAPI, UploadFile, File, Form
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 import shutil
+from pathlib import Path
 
 # Add the parent directory to the path so Python can find the backend modules
 current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -35,13 +36,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
+
 # Mount static files
 app.mount("/assets", StaticFiles(directory=os.path.join(current_dir, "../frontend/assets")), name="assets")
 app.mount("/css", StaticFiles(directory=os.path.join(current_dir, "../frontend/css")), name="css")
 app.mount("/js", StaticFiles(directory=os.path.join(current_dir, "../frontend/js")), name="js")
 
 # Setup templates
-templates = Jinja2Templates(directory=os.path.join(current_dir, "../frontend/pages"))
+templates = Jinja2Templates(directory=os.path.join(current_dir, "../frontend"))
+
+@app.get("/{full_path:path}")
+async def serve_spa(full_path: str):
+    return FileResponse(Path("frontend/index.html"))
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index(request: Request):
@@ -69,7 +76,12 @@ async def create_recipe(
     devices: str = Form(...),
     image: UploadFile = File(...),
 ):
-    image_path = f"static/images/{image.filename}"
+    
+    UPLOAD_FOLDER = "/assets/images/uploads"
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+    filename = Path(image.filename).name  # strips directory info if any
+    image_path = os.path.join(UPLOAD_FOLDER, filename)
     
     # Save image to disk
     with open(image_path, "wb") as buffer:
@@ -79,7 +91,7 @@ async def create_recipe(
     # Example:
     # db.save_recipe(title, description, ..., image_path)
 
-    return JSONResponse(content={"message": "Recipe created successfully", "image_path": image_path})
+    return JSONResponse(content={"message": "Recipe created successfully", "image_url": f"/assets/images/uploads/{filename}"})
 
 @app.get("/add-recipe", response_class=HTMLResponse)
 async def add_recipe_page(request: Request):
@@ -89,9 +101,9 @@ async def add_recipe_page(request: Request):
 async def add_ingredient_page(request: Request):
     return templates.TemplateResponse("add-ingred.html", {"request": request})
 
-# @app.get("/{path:path}", response_class=HTMLResponse)
-# async def catch_all(request: Request, path: str):
-#     return templates.TemplateResponse("404.html", {"request": request})
+@app.get("/{path:path}", response_class=HTMLResponse)
+async def catch_all(request: Request, path: str):
+    return templates.TemplateResponse("404.html", {"request": request})
 
 
 if __name__ == "__main__":

@@ -161,12 +161,14 @@ document.addEventListener("DOMContentLoaded", () => {
         let filteredRecipes = [...recipes];
 
         if (filters.ingredients?.length > 0) {
-            filteredRecipes = filteredRecipes.filter(recipe =>
-                filters.ingredients.every(ing =>
-                    recipe.ingredients?.some(i => i.toLowerCase().includes(ing.toLowerCase()))
-                )
-            );
+            filteredRecipes = filteredRecipes.filter(recipe => {
+                const recipeIngredients = recipe.ingredients?.split(',').map(i => i.trim().toLowerCase()) || [];
+                return filters.ingredients.every(ing =>
+                    recipeIngredients.includes(ing.toLowerCase())
+                );
+            });
         }
+
 
         if (filters.allergens?.length > 0) {
             filteredRecipes = filteredRecipes.filter(recipe =>
@@ -207,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
             card.className = "recipe-card";
 
             const name = recipe.title || recipe.name || "Untitled";
-            const image = recipe.image || "/assets/default-recipe.png";
+            const image = recipe.image || "/assets/default-recipe.jpg";
             const time = recipe.times || recipe.time || "N/A";
             const serves = recipe.serves || "N/A";
             const devices = recipe.devices || "N/A";
