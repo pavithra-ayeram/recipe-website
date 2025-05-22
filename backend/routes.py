@@ -1,12 +1,13 @@
 # Update your routes.py file to ensure it properly handles the login and signup routes
 
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends, HTTPException, status, Request, Query
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from . import models, schemas
 from .database import get_db
 from .auth import get_current_user, create_access_token, verify_password, get_password_hash
+
 
 router = APIRouter()
 
@@ -41,7 +42,7 @@ def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
     return {"access_token": access_token, "token_type": "bearer"}
 
 # Recipe routes
-@router.post("/recipes/", response_model=schemas.Recipe)
+@router.post("/recipes", response_model=schemas.Recipe)
 def create_recipe(
     recipe: schemas.RecipeCreate,
     db: Session = Depends(get_db),
@@ -58,14 +59,36 @@ def create_recipe(
     db.refresh(db_recipe)
     return db_recipe
 
-@router.get("/recipes/", response_model=List[schemas.Recipe])
-def read_recipes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    recipes = db.query(models.Recipe).offset(skip).limit(limit).all()
+@router.get("/recipes", response_model=List[schemas.Recipe])
+def read_recipes(
+    skip: int = 0,
+    limit: int = 100,
+    ingredients: Optional[List[str]] = Query(None),
+    allergens: Optional[List[str]] = Query(None),
+    max_calories: Optional[int] = None,
+    max_time: Optional[int] = None,
+    db: Session = Depends(get_db)
+):
+    query = db.query(models.Recipe)
+
+    if ingredients:
+        query = query.join(models.Recipe.ingredients).filter(models.Ingredient.name.in_(ingredients))
+
+    if allergens:
+        query = query.join(models.Recipe.allergens).filter(~models.Allergen.name.in_(allergens))
+
+    if max_calories:
+        query = query.filter(models.Recipe.calories <= max_calories)
+
+    if max_time:
+        query = query.filter(models.Recipe.times <= max_time)
+
+    recipes = query.offset(skip).limit(limit).all()
     return recipes
 
 
 # Ingredient routes
-@router.post("/ingredients/", response_model=schemas.Ingredient)
+@router.post("/ingredients", response_model=schemas.Ingredient)
 def create_ingredient(
     ingredient: schemas.IngredientCreate,
     db: Session = Depends(get_db),
@@ -77,7 +100,7 @@ def create_ingredient(
     db.refresh(db_ingredient)
     return db_ingredient
 
-@router.get("/ingredients/", response_model=List[schemas.Ingredient])
+@router.get("/ingredients", response_model=List[schemas.Ingredient])
 def read_ingredients(
     skip: int = 0,
     limit: int = 100,

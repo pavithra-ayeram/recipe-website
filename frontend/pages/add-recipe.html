@@ -21,27 +21,28 @@
 
         <h2>Add a New Recipe</h2>
 
-        <form id="recipe-form">
+        <form id="recipe-form" action="http://localhost:8000/api/recipes/" method="post" enctype="multipart/form-data">
             <label for="recipe-name">Recipe Name:</label>
-            <input type="text" id="recipe-name" required>
+            <input type="text" id="recipe-name" name="title" required>
 
             <label for="cooking-time">Cooking Time (in minutes):</label>
-            <input type="number" id="cooking-time" min="0" required>
+            <input type="number" id="cooking-time" name="times" min="0" required>
 
             <label for="cooking-devices">Cooking Devices Required:</label>
-            <input type="text" id="cooking-devices" required>
+            <input type="text" id="cooking-devices" name="devices" required>
 
             <label for="recipe-ingredients">Ingredients:</label>
-            <textarea id="recipe-ingredients" rows="4" placeholder="List ingredients separated by commas" required></textarea>
+            <textarea id="recipe-ingredients" name="ingredients" rows="4" placeholder="List ingredients separated by commas" required></textarea>
 
             <label for="recipe-steps">Steps:</label>
-            <textarea id="recipe-steps" rows="5" placeholder="Write step-by-step instructions" required></textarea>
+            <textarea id="recipe-steps" name="instructions" rows="5" placeholder="Write step-by-step instructions" required></textarea>
 
             <label for="recipe-image">Upload Image:</label>
             <div class="file-upload">
                 <label class="file-label" for="recipe-image">Choose File</label>
-                <input type="file" id="recipe-image" accept="image/*">
+                <input type="file" id="recipe-image" name="image" accept="image/*" required>
             </div>
+
             <img id="preview" class="recipe-image" src="" alt="Recipe Preview">
 
             <div class="btn-group">

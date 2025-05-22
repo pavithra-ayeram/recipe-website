@@ -1,8 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Load recipes when the page loads
     loadRecipes();
 
-    // Elements for filter controls
     const ingredientInput = document.getElementById("ingredient-input");
     const addIngredientButton = document.getElementById("add-ingredient");
     const allergenInput = document.getElementById("allergen-input");
@@ -13,10 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const caloriesInput = document.getElementById("calories-filter");
     const timeInput = document.getElementById("time-filter");
 
-    // Track selected filters
     let selectedFilters = [];
 
-    // Add ingredient when button is clicked
     addIngredientButton.addEventListener("click", () => {
         const ingredient = ingredientInput.value.trim();
         if (ingredient && !selectedFilters.includes(ingredient)) {
@@ -25,66 +21,52 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Allow "Enter" key to add an ingredient
     ingredientInput.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
-            addIngredientButton.click();
-        }
+        if (event.key === "Enter") addIngredientButton.click();
     });
 
-    // Add allergen when button is clicked
     avoidAllergenButton.addEventListener("click", () => {
         const allergen = allergenInput.value.trim();
-        if (allergen && !selectedFilters.includes("!"+allergen)) { // Mark allergens with "!" prefix
-            addFilterTag("!"+allergen);
+        if (allergen && !selectedFilters.includes("!" + allergen)) {
+            addFilterTag("!" + allergen);
             allergenInput.value = "";
         }
     });
 
-    // Allow "Enter" key to add an allergen
     allergenInput.addEventListener("keypress", (event) => {
-        if (event.key === "Enter") {
-            avoidAllergenButton.click();
-        }
+        if (event.key === "Enter") avoidAllergenButton.click();
     });
 
-    // Add filter tag to UI
     function addFilterTag(filter) {
         selectedFilters.push(filter);
         updateFiltersUI();
     }
 
-    // Remove filter tag
     function removeFilterTag(filter) {
         selectedFilters = selectedFilters.filter(item => item !== filter);
         updateFiltersUI();
     }
 
-    // Update selected filters UI
     function updateFiltersUI() {
         selectedFiltersDiv.innerHTML = "";
         selectedFilters.forEach(filter => {
             const tag = document.createElement("div");
             tag.classList.add("filter-tag");
-    
-            // Display text (remove "!" prefix for allergens in display)
+
             const displayText = filter.startsWith("!") ? filter.substring(1) : filter;
             const textNode = document.createTextNode(displayText);
-            
+
             const removeBtn = document.createElement("span");
             removeBtn.textContent = "❌";
             removeBtn.style.cursor = "pointer";
-            removeBtn.addEventListener("click", () => {
-                removeFilterTag(filter);
-            });
-    
+            removeBtn.addEventListener("click", () => removeFilterTag(filter));
+
             tag.appendChild(textNode);
             tag.appendChild(removeBtn);
             selectedFiltersDiv.appendChild(tag);
         });
     }
 
-    // Apply filters when user clicks "Apply Filters"
     document.getElementById("apply-filters").addEventListener("click", () => {
         applyFilters();
     });
@@ -93,18 +75,29 @@ document.addEventListener("DOMContentLoaded", () => {
         const filters = {
             ingredients: selectedFilters.filter(f => !f.startsWith("!")),
             allergens: selectedFilters.filter(f => f.startsWith("!")).map(a => a.substring(1)),
-            maxCalories: caloriesInput.value,
-            maxTime: timeInput.value
+            maxCalories: caloriesInput.value ? parseInt(caloriesInput.value) : null,
+            maxTime: timeInput.value ? parseInt(timeInput.value) : null
         };
 
-        loadRecipes(filters);
+        const params = new URLSearchParams();
+        filters.ingredients.forEach(ingredient => params.append("ingredients", ingredient));
+        filters.allergens.forEach(allergen => params.append("allergens", allergen));
+        if (filters.maxCalories) params.append("max_calories", filters.maxCalories);
+        if (filters.maxTime) params.append("max_time", filters.maxTime);
+
+        fetch(`http://localhost:8000/api/recipes?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => displayRecipes(data))
+            .catch(error => {
+                console.error("Error fetching filtered recipes:", error);
+                filterAndDisplayRecipes(recipeData, filters);
+            });
     }
 
-    // Recipe data - this is our local fallback data
     const recipeData = [
         {
             id: "R001",
-            name: "Paneer Butter Masala", 
+            name: "Paneer Butter Masala",
             image: "/assets/paneer-butter-masala.jpg",
             time: 30,
             serves: 3,
@@ -116,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
         {
             id: "R002",
             name: "Chocolate Mug Cake",
-            image: "/assets/mug-cake.jpg", 
+            image: "/assets/mug-cake.jpg",
             time: 5,
             serves: 1,
             devices: ["Microwave"],
@@ -148,79 +141,61 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     ];
 
-    // Load recipes function - with error handling and fallback to local data
-    function loadRecipes(filters = {}) {
-        // First try to load from the API with a fetch call
-        fetch('/api/recipes')
-        .then(response => {
-            if (!response.ok) {  // If response status is not OK (e.g., 404, 500)
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            return response.json();  // Try parsing JSON if status is OK
-          })
-          .then(data => {
-            console.log('Data:', data);
-          })
-          .catch(error => {
-            console.error('Error fetching data:', error);
-            // Handle the error accordingly (e.g., show a fallback UI, use local data)
-          });
+    function loadRecipes() {
+        const resultsDiv = document.getElementById("recipe-list");
+        resultsDiv.innerHTML = "<p class='loading-text'>Loading recipes...</p>";
+
+        fetch("http://localhost:8000/api/recipes")
+            .then(response => response.json())
+            .then(data => {
+                console.log("Fetched data:", data);
+                filterAndDisplayRecipes(data, {});
+            })
+            .catch(error => {
+                console.error("Error fetching data:", error);
+                filterAndDisplayRecipes(recipeData, {});
+            });
     }
 
-    // Function to filter and display recipes
     function filterAndDisplayRecipes(recipes, filters) {
         let filteredRecipes = [...recipes];
 
-        // Apply ingredient filters
-        if (filters.ingredients && filters.ingredients.length > 0) {
-            filteredRecipes = filteredRecipes.filter(recipe => {
-                return filters.ingredients.every(ingredient => 
-                    recipe.ingredients.some(i => i.toLowerCase().includes(ingredient.toLowerCase()))
-                );
-            });
-        }
-
-        // Apply allergen filters
-        if (filters.allergens && filters.allergens.length > 0) {
-            filteredRecipes = filteredRecipes.filter(recipe => {
-                return !filters.allergens.some(allergen => 
-                    recipe.allergens && recipe.allergens.some(a => a.toLowerCase().includes(allergen.toLowerCase()))
-                );
-            });
-        }
-
-        // Apply max calories filter
-        if (filters.maxCalories && !isNaN(filters.maxCalories)) {
-            filteredRecipes = filteredRecipes.filter(recipe => 
-                recipe.calories <= parseInt(filters.maxCalories)
+        if (filters.ingredients?.length > 0) {
+            filteredRecipes = filteredRecipes.filter(recipe =>
+                filters.ingredients.every(ing =>
+                    recipe.ingredients?.some(i => i.toLowerCase().includes(ing.toLowerCase()))
+                )
             );
         }
 
-        // Apply max time filter
-        if (filters.maxTime && !isNaN(filters.maxTime)) {
-            filteredRecipes = filteredRecipes.filter(recipe => 
-                recipe.time <= parseInt(filters.maxTime)
+        if (filters.allergens?.length > 0) {
+            filteredRecipes = filteredRecipes.filter(recipe =>
+                !filters.allergens.some(allergen =>
+                    recipe.allergens?.some(a => a.toLowerCase().includes(allergen.toLowerCase()))
+                )
             );
+        }
+
+        if (filters.maxCalories) {
+            filteredRecipes = filteredRecipes.filter(recipe => recipe.calories <= filters.maxCalories);
+        }
+
+        if (filters.maxTime) {
+            filteredRecipes = filteredRecipes.filter(recipe => recipe.time <= filters.maxTime);
         }
 
         displayRecipes(filteredRecipes);
     }
 
-    // Display recipes on the page
     function displayRecipes(recipes) {
-        const resultsDiv = document.getElementById("recipe-results");
-        
-        // Check if the element exists
+        const resultsDiv = document.getElementById("recipe-list");
+
         if (!resultsDiv) {
-            console.error("Cannot find element with ID 'recipe-results'");
+            console.error("Cannot find element with ID 'recipe-list'");
             return;
         }
 
-        // Clear previous results
         resultsDiv.innerHTML = "";
-
-        // Debug log
-        console.log("Displaying recipes:", recipes);
 
         if (!recipes || recipes.length === 0) {
             resultsDiv.innerHTML = "<p class='no-results'>No recipes found matching your criteria.</p>";
@@ -228,46 +203,41 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         recipes.forEach(recipe => {
-            // Create a new recipe card element
-            const recipeCard = document.createElement("div");
-            recipeCard.className = "recipe-card";
-            
-            // Handle potential missing data
-            const recipeImage = recipe.image || "/assets/default-recipe.jpg";
-            const recipeDevices = recipe.devices ? recipe.devices.join(", ") : "None";
-            const recipeIngredients = recipe.ingredients ? recipe.ingredients.join(", ") : "Not specified";
-            
-            // Create recipe card HTML
-            recipeCard.innerHTML = `
-                <img src="${recipeImage}" alt="${recipe.name}" class="recipe-img">
-                <h2>${recipe.name}</h2>
-                <p><strong>Time:</strong> ${recipe.time} mins, <strong>Serves:</strong> ${recipe.serves}, <strong>Devices:</strong> ${recipeDevices}</p>
-                <p><strong>Ingredients:</strong> ${recipeIngredients}</p>
-                ${recipe.allergens && recipe.allergens.length > 0 ? `<p><strong>Allergens:</strong> ${recipe.allergens.join(", ")}</p>` : ''}
-                <a href="/recipe/${recipe.id}" class="btn">View Recipe</a>
+            const card = document.createElement("div");
+            card.className = "recipe-card";
+
+            const name = recipe.title || recipe.name || "Untitled";
+            const image = recipe.image || "/assets/default-recipe.jpg";
+            const time = recipe.times || recipe.time || "N/A";
+            const serves = recipe.serves || "N/A";
+            const devices = Array.isArray(recipe.devices) ? recipe.devices.join(", ") : "N/A";
+            const ingredients = Array.isArray(recipe.ingredients)
+                ? recipe.ingredients.map(i => (typeof i === "string" ? i : i.name)).join(", ")
+                : "N/A";
+            const allergens = Array.isArray(recipe.allergens) && recipe.allergens.length > 0
+                ? recipe.allergens.map(a => (typeof a === "string" ? a : a.name)).join(", ")
+                : null;
+
+            card.innerHTML = `
+                <h2>${name}</h2>
+                <img src="${image}" alt="${name}" class="recipe-img"/>
+                <p><strong>Ingredients:</strong> ${ingredients}</p>
+                <p><strong>Time:</strong> ${time} minutes</p>
+                <p><strong>Serves:</strong> ${serves}</p>
+                <p><strong>Devices:</strong> ${devices}</p>
+                ${allergens ? `<p><strong>Allergens:</strong> ${allergens}</p>` : ""}
             `;
-            
-            resultsDiv.appendChild(recipeCard);
+            resultsDiv.appendChild(card);
         });
     }
 
-    // Sidebar toggle event
     const sidebarToggle = document.getElementById("sidebar-toggle");
     if (sidebarToggle) {
-        sidebarToggle.addEventListener("click", () => {
-            toggleSidebar();
-        });
+        sidebarToggle.addEventListener("click", toggleSidebar);
     }
 
-    // Function to handle sidebar toggle action
     function toggleSidebar() {
         sidebar.classList.toggle("collapsed");
-        
-        // Adjust main content margin when sidebar is collapsed
-        if (sidebar.classList.contains("collapsed")) {
-            mainContent.style.marginLeft = "80px"; // Width of collapsed sidebar + padding
-        } else {
-            mainContent.style.marginLeft = "350px"; // Width of expanded sidebar + padding
-        }
+        mainContent.style.marginLeft = sidebar.classList.contains("collapsed") ? "80px" : "350px";
     }
 });
