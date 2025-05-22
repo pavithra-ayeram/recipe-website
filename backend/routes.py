@@ -59,16 +59,10 @@ def create_recipe(
     return db_recipe
 
 @router.get("/recipes/", response_model=List[schemas.Recipe])
-def read_recipes(
-    skip: int = 0,
-    limit: int = 100,
-    db: Session = Depends(get_db),
-    current_user: models.User = Depends(get_current_user)
-):
-    recipes = db.query(models.Recipe).filter(
-        models.Recipe.owner_id == current_user.id
-    ).offset(skip).limit(limit).all()
+def read_recipes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+    recipes = db.query(models.Recipe).offset(skip).limit(limit).all()
     return recipes
+
 
 # Ingredient routes
 @router.post("/ingredients/", response_model=schemas.Ingredient)

@@ -17,19 +17,25 @@ class UserLogin(BaseModel):
     email: str
     password: str
 
+from pydantic import BaseModel
+from typing import Optional
+
 class RecipeBase(BaseModel):
     title: str
-    description: Optional[str] = None
     instructions: str
+    times: str
+    serves: str
+    devices: Optional[str] = None
 
 class RecipeCreate(RecipeBase):
     pass
 
 class Recipe(RecipeBase):
     id: int
-    owner_id: int
-    class Config:
-        from_attributes = True
+
+    model_config = {
+        "from_attributes": True
+    }
 
 class IngredientBase(BaseModel):
     name: str

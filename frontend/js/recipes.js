@@ -152,21 +152,19 @@ document.addEventListener("DOMContentLoaded", () => {
     function loadRecipes(filters = {}) {
         // First try to load from the API with a fetch call
         fetch('/api/recipes')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // If successful, filter and display the API data
-                filterAndDisplayRecipes(data, filters);
-            })
-            .catch(error => {
-                console.warn('Error fetching recipes from API, using local data instead:', error);
-                // On failure, use our local recipeData
-                filterAndDisplayRecipes(recipeData, filters);
-            });
+        .then(response => {
+            if (!response.ok) {  // If response status is not OK (e.g., 404, 500)
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            return response.json();  // Try parsing JSON if status is OK
+          })
+          .then(data => {
+            console.log('Data:', data);
+          })
+          .catch(error => {
+            console.error('Error fetching data:', error);
+            // Handle the error accordingly (e.g., show a fallback UI, use local data)
+          });
     }
 
     // Function to filter and display recipes
