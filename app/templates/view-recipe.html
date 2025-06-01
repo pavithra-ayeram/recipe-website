@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ recipe.title }} | PaDhaNiSa</title>
+    <link rel="icon" type="image/png" href="/static/assets/logo.png">
+    <link rel="stylesheet" href="/static/css/view-recipe.css"> 
+</head>
+<body>
+
+<div class="container">
+    <div class="recipe-header">
+        <img src="/static/assets/images/uploads/{{recipe.image}}" alt="${name}" class="recipe-img" 
+                    onerror="this.onerror=null; this.src='/static/assets/default-recipe.jpg';" alt="{{ recipe.title }}"/>
+        <div class="recipe-details">
+            <h1>{{ recipe.title }}</h1>
+            <p class="metadata">
+                <strong>Cuisine:</strong> {{ recipe.cuisine }}<br>
+                <strong>Diet Type:</strong> {{ recipe.diet_type }}<br>
+                <strong>Difficulty:</strong> {{ recipe.difficulty_level }}<br>
+                <strong>Time:</strong> {{ recipe.times }} min | <strong>Serves:</strong> {{ recipe.serves }}<br>
+                <strong>Calories:</strong> {{ recipe.calories }} kcal<br>
+                <strong>Devices:</strong> {{ recipe.devices }}
+            </p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>Description</h2>
+        <p>{{ recipe.description }}</p>
+    </div>
+
+    <div class="section">
+        <h2>Ingredients</h2>
+        <ul>
+            {% for item in recipe.ingredients %}
+                <li>{{ item.name }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Instructions</h2>
+        <ol>
+            {% for step in recipe.instructions.split('.') if step.strip() %}
+                <li>{{ step.strip() }}.</li>
+            {% endfor %}
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Allergens</h2>
+        {% if recipe.allergens %}
+            {% for allergen in recipe.allergens %}
+                <span class="tag">{{ allergen.name }}</span>
+            {% endfor %}
+        {% else %}
+            <p>No common allergens.</p>
+        {% endif %}
+    </div>
+
+    <a href="/recipes" class="back-button">← Back to Recipes</a>
+</div>
+
+</body>
+</html>

@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <p><strong>Serves:</strong> ${serves}</p>
                 <p><strong>Devices:</strong> ${devices}</p>
                 ${allergens ? `<p><strong>Allergens:</strong> ${allergens}</p>` : ""}
-                <a href="/recipe/${recipe.id}" class="btn">View Recipe</a>
+                <a href="/recipes/${recipe.id}" class="btn">View Recipe</a>
             `;
 
             resultsDiv.appendChild(card);

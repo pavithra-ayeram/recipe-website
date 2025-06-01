@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+:root {
+    --primary-color: #FF6B6B;
+    --primary-hover: #FF9E6B;
+    --background-color: #FCEADE;
+    --text-color: #2B2B2B;
+    --card-bg: #FFFFFF;
+    --secondary-color: #6A67CE;
+    --highlight-color: #FFD93D;
+    --shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    background: var(--card-bg);
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+.recipe-header {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.recipe-header img {
+    max-width: 300px;
+    width: 100%;
+    border-radius: 1rem;
+    object-fit: cover;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-details {
+    flex: 1;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+.metadata {
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+    color: #181818;
+}
+
+.section {
+    margin-top: 2rem;
+}
+
+.section h2 {
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 0.25rem;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+ul, ol {
+    padding-left: 1.2rem;
+}
+
+.tag {
+    display: inline-block;
+    background-color: var(--card-bg);
+    color: var(--primary-color);
+    padding: 0.3rem 0.7rem;
+    margin: 0.2rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.back-button {
+    display: inline-block;
+    margin-top: 2rem;
+    text-decoration: none;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: var(--primary-hover);
+}
