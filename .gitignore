@@ -1,0 +1,36 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+
+# Virtual Environments
+venv/
+ENV/
+env/
+.venv/
+
+# Environment variables
+.env
+
+# VS Code & IDE files
+.vscode/
+.idea/
+
+# Byte-compiled
+*.so
+
+# Compiled assets
+*.egg-info/
+dist/
+build/
+
+# Database dumps
+*.sql
+*.bak
+
+# Cache
+*.cache/

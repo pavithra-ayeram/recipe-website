@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column, Integer, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
-from .database import Base
+from app.database import Base
 
 # Association table for many-to-many relationship between recipes and ingredients
 recipe_ingredient = Table(
@@ -56,11 +56,11 @@ class Recipe(Base):
     times = Column(Integer)
     serves = Column(String)
     devices = Column(String)
-    image = Column(String(200))  # Add this line
-    calories = Column(Integer)   # Add this line
-    diet_type = Column(String(100))  # e.g., vegetarian, vegan, keto
-    difficulty_level = Column(String(50))  # e.g., Easy, Medium, Hard
-    cuisine = Column(String(100))  # e.g., South Indian, Italian
+    image = Column(String(200)) 
+    calories = Column(Integer)  
+    diet_type = Column(String(100))  
+    difficulty_level = Column(String(50))  
+    cuisine = Column(String(100))  
 
     owner_id = Column(Integer, ForeignKey("users.id"))
     owner = relationship("User", back_populates="recipes")

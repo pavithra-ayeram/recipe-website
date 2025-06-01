@@ -16,12 +16,9 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
 # Import backend modules
-from backend.database import engine
-from backend import models
-from backend.routes import router
-
-# Create database tables
-models.Base.metadata.create_all(bind=engine)
+from app.database import engine
+from app import models
+from app.routes import router
 
 app = FastAPI()
 app.include_router(router, prefix="/api")
@@ -36,19 +33,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/", StaticFiles(directory="frontend", html=True), name="frontend")
-
-# Mount static files
-app.mount("/assets", StaticFiles(directory=os.path.join(current_dir, "../frontend/assets")), name="assets")
-app.mount("/css", StaticFiles(directory=os.path.join(current_dir, "../frontend/css")), name="css")
-app.mount("/js", StaticFiles(directory=os.path.join(current_dir, "../frontend/js")), name="js")
-
 # Setup templates
-templates = Jinja2Templates(directory=os.path.join(current_dir, "../frontend"))
-
-@app.get("/{full_path:path}")
-async def serve_spa(full_path: str):
-    return FileResponse(Path("frontend/index.html"))
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
+templates = Jinja2Templates(directory="app/templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def read_index(request: Request):

@@ -1,12 +1,10 @@
-# Update your routes.py file to ensure it properly handles the login and signup routes
-
 from fastapi import APIRouter, Depends, HTTPException, status, Request, Query
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from typing import List, Optional
-from . import models, schemas
-from .database import get_db
-from .auth import get_current_user, create_access_token, verify_password, get_password_hash
+from app import models, schemas
+from app.dependencies import get_db
+from app.auth import get_current_user, create_access_token, verify_password, get_password_hash
 
 
 router = APIRouter()
