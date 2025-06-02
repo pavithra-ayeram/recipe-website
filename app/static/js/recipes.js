@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (filters.maxCalories) params.append("max_calories", filters.maxCalories);
         if (filters.maxTime) params.append("max_time", filters.maxTime);
 
-        fetch(`http://localhost:8000/api/recipes?${params.toString()}`)
+        fetch(`/api/recipes?${params.toString()}`)
             .then(response => response.json())
             .then(data => displayRecipes(data))
             .catch(error => {
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const resultsDiv = document.getElementById("recipe-list");
         resultsDiv.innerHTML = "<p class='loading-text'>Loading recipes...</p>";
 
-        fetch("http://localhost:8000/api/recipes")
+        fetch("/api/recipes")
             .then(response => response.json())
             .then(data => {
                 console.log("Fetched data:", data);
