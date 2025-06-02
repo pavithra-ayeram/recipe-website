@@ -19,7 +19,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(current_dir)
 
 # Import backend modules
-from app.database import engine
+from app.database import engine, SessionLocal
 from app import models
 from app.models import Recipe, Base, Ingredient, Allergen, User
 from app.routes import router
@@ -29,10 +29,11 @@ from app.auth import get_current_user
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
-    seed_database()
-    yield  
-
+    Base.metadata.create_all(bind=engine) 
+    db = SessionLocal()
+    seed_database(db)  
+    db.close()
+    yield
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(router, prefix="/api")
