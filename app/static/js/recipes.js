@@ -208,17 +208,36 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.createElement("div");
             card.className = "recipe-card";
 
+            // Capitalize function
+            function capitalizeFirstLetter(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+
+            // Setup values with formatting
             const name = recipe.title || recipe.name || "Untitled";
             const image = recipe.image ? `/static/assets/images/uploads/${recipe.image}` : "/static/assets/default-recipe.jpg";
             const time = recipe.times || recipe.time || "N/A";
             const serves = recipe.serves || "N/A";
-            const devices = recipe.devices || "N/A";
-            const ingredients = Array.isArray(recipe.ingredients)
-                ? recipe.ingredients.map(i => (typeof i === "string" ? i : i.name)).join(", ")
+
+            // Capitalize each word in devices
+            const devices = recipe.devices 
+                ? recipe.devices.split(" ").map(capitalizeFirstLetter).join(" ") 
                 : "N/A";
+
+            // Capitalize each ingredient name
+            const ingredients = Array.isArray(recipe.ingredients)
+                ? recipe.ingredients
+                    .map(i => capitalizeFirstLetter(typeof i === "string" ? i : i.name))
+                    .join(", ")
+                : "N/A";
+
+            // Capitalize allergens too, just in case you want them neat
             const allergens = Array.isArray(recipe.allergens) && recipe.allergens.length > 0
-                ? recipe.allergens.map(a => (typeof a === "string" ? a : a.name)).join(", ")
+                ? recipe.allergens
+                    .map(a => capitalizeFirstLetter(typeof a === "string" ? a : a.name))
+                    .join(", ")
                 : null;
+
 
             card.innerHTML = `
                 <h2>${name}</h2>
