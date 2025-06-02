@@ -5,12 +5,6 @@ import logging
 
 def seed_database(db):
 
-    # Clear existing data
-    db.query(Recipe).delete()
-    db.query(Ingredient).delete()
-    db.query(Allergen).delete()
-    db.commit()
-
     # Add dummy users (only if not present)
     for i in range(1, 7):
         if not db.query(User).filter_by(id=i).first():
