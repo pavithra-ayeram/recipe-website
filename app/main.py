@@ -24,14 +24,14 @@ from app import models
 from app.models import Recipe, Base, Ingredient, Allergen, User
 from app.routes import router
 from app.dependencies import get_db
-from app.seed_data import seed_database
 from app.auth import get_current_user
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    db = SessionLocal()
     try:
-        Base.metadata.create_all(bind=engine)
-        db = SessionLocal()
+        from app.seed_data import seed_database
         seed_database(db)
     finally:
         db.close()
