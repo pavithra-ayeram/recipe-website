@@ -136,11 +136,9 @@ def view_recipe(recipe_id: int, request: Request, db: Session = Depends(get_db))
         raise HTTPException(status_code=404, detail="Recipe not found")
     return templates.TemplateResponse("view-recipe.html", {"request": request, "recipe": recipe})
 
-
 @app.get("/{path:path}", response_class=HTMLResponse)
 async def catch_all(request: Request, path: str):
     return templates.TemplateResponse("404.html", {"request": request})
-
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8000, reload=True)

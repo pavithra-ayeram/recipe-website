@@ -7,32 +7,9 @@
     <title>Recipe Listing</title>
     <link rel="stylesheet" href="/static/css/recipes.css">
     <link rel="icon" type="image/png" href="/static/assets/logo.png">
-    <style>
-        .debug-info {
-            background: #ffecb3;
-            padding: 10px;
-            margin: 10px 0;
-            border-left: 4px solid #ff9800;
-            display: none; /* Hidden by default */
-        }
-        
-        #debug-toggle {
-            position: fixed;
-            bottom: 10px;
-            right: 10px;
-            background: #ff9800;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            z-index: 1000;
-        }
-    </style>
 </head>
 
 <body>
-    <!-- Fixed Header -->
     <header class="top-header">
         <div class="header-inner">
             <h1 class="page-title">Recipe Listing</h1>
@@ -40,7 +17,6 @@
         </div>
     </header>
     <div class="container">
-        <!-- Sidebar (Filters) -->
         <div class="sidebar" id="sidebar">
             <button id="sidebar-toggle" class="sidebar-toggle">
                 ☰ <span class="toggle-text">Toggle</span>
@@ -48,7 +24,6 @@
 
             <div class="filter-section">
                 <div id="selected-filters">
-                    <!-- Selected Filter Tags will be dynamically added here -->
                 </div>
 
                 <div class="filter-inputs">
@@ -71,7 +46,6 @@
             <a href="/add-recipe" class="btn" id="add-recipe">Add New Recipe</a>
         </div>
         
-        <!-- Main Content -->
         <div class="main-content" id="main-content">
             <div id="recipe-results">
                 <div id="recipe-list" class="recipe-container recipe-grid"></div>

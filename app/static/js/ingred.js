@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function() {
             showError("Ingredient name is required.", ingredName);
             isValid = false;
         } else {
-            setValid(ingredName); // Fixed: changed recipeName to ingredName
+            setValid(ingredName);
         }
 
         if (category.value.trim() === "") {

@@ -9,7 +9,7 @@ from app import models
 from app.dependencies import get_db
 
 # Security configuration
-SECRET_KEY = "PaDhaNiSa@123"  # Change this in production
+SECRET_KEY = "PaDhaNiSa" 
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 

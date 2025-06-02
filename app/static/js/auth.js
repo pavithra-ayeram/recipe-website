@@ -1,5 +1,3 @@
-// auth.js - Fixed version to handle login and signup form submissions
-
 document.addEventListener('DOMContentLoaded', function() {
     // Get the current page
     const currentPage = window.location.pathname;
@@ -77,7 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 
                 try {
-                    // FIXED: Ensure this matches your backend route exactly
                     const response = await fetch('/api/signup', {
                         method: 'POST',
                         headers: {
