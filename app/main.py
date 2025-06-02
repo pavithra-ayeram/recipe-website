@@ -9,6 +9,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.responses import JSONResponse, FileResponse
 import shutil
+from contextlib import asynccontextmanager
 from pathlib import Path
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException
@@ -19,20 +20,30 @@ sys.path.append(current_dir)
 
 # Import backend modules
 from app.database import engine
-from app.models import Recipe
+from app import models
+from app.models import Recipe, Base, Ingredient, Allergen, User
 from app.routes import router
 from app.dependencies import get_db
+from app.seed_data import seed_database
+from app.auth import get_current_user
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    Base.metadata.create_all(bind=engine)
+    seed_database()
+    yield  
+
+
+app = FastAPI(lifespan=lifespan)
 app.include_router(router, prefix="/api")
 
 
-# Configure CORS - IMPORTANT: Make sure these settings allow your frontend to access the API
+# Configure CORS 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # In production, restrict this to specific domains
+    allow_origins=["*"],  
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE"],  # Make sure POST is included
+    allow_methods=["GET", "POST", "PUT", "DELETE"], 
     allow_headers=["*"],
 )
 
@@ -65,23 +76,46 @@ async def create_recipe(
     serves: int = Form(...),
     devices: str = Form(...),
     image: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),  
 ):
-    
-    UPLOAD_FOLDER = "/assets/images/uploads"
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    try:
+        # Ensure upload directory exists
+        UPLOAD_FOLDER = "assets/images/uploads"
+        os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-    filename = Path(image.filename).name  # strips directory info if any
-    image_path = os.path.join(UPLOAD_FOLDER, filename)
-    
-    # Save image to disk
-    with open(image_path, "wb") as buffer:
-        shutil.copyfileobj(image.file, buffer)
+        # Save the uploaded image
+        filename = Path(image.filename).name
+        image_path = os.path.join(UPLOAD_FOLDER, filename)
+        with open(image_path, "wb") as buffer:
+            shutil.copyfileobj(image.file, buffer)
 
-    # Save the rest to your database...
-    # Example:
-    # db.save_recipe(title, description, ..., image_path)
+        # Create new Recipe
+        new_recipe = Recipe(
+            title=title,
+            description=description,
+            instructions=instructions,
+            times=times,
+            serves=serves,
+            devices=devices,
+            image=filename,
+            owner_id=current_user.id  
+        )
 
-    return JSONResponse(content={"message": "Recipe created successfully", "image_url": f"/assets/images/uploads/{filename}"})
+        db.add(new_recipe)
+        db.commit()
+        db.refresh(new_recipe)
+
+        return JSONResponse(
+            content={
+                "message": "Recipe created successfully",
+                "recipe_id": new_recipe.id,
+                "image_url": f"/{image_path}"
+            }
+        )
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Recipe creation failed: {str(e)}")
 
 @app.get("/add-recipe", response_class=HTMLResponse)
 async def add_recipe_page(request: Request):

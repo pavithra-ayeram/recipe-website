@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session, joinedload
-from app.models import Recipe, Ingredient, Allergen
+from app.models import Recipe, Ingredient, Allergen, User
 from app.database import SessionLocal
+import logging
 
 # Create DB session
 db: Session = SessionLocal()
@@ -10,6 +11,14 @@ db.query(Recipe).delete()
 db.query(Ingredient).delete()
 db.query(Allergen).delete()
 db.commit()
+
+# Add dummy users (only if not present)
+for i in range(1, 7):
+    if not db.query(User).filter_by(id=i).first():
+        db.add(User(id=i, username=f"user{i}", email=f"user{i}@mail.com", hashed_password="hashed"))
+
+db.commit()
+
 
 # 🧂 Seed Ingredients & Allergens
 ingredient_names = [
@@ -227,4 +236,10 @@ for i, recipe_data in enumerate(recipes):
 db.commit()
 db.close()
 
-print("✅ Seeded 12 recipes with ingredients, allergens, and rotating owner_ids (1–6).")
+logging.info("✅ Seeded 12 recipes...")
+
+
+def seed_database():
+    db: Session = SessionLocal()
+    # your logic here
+    db.close()
