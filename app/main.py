@@ -29,11 +29,14 @@ from app.auth import get_current_user
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine) 
-    db = SessionLocal()
-    seed_database(db)  
-    db.close()
+    try:
+        Base.metadata.create_all(bind=engine)
+        db = SessionLocal()
+        seed_database(db)
+    finally:
+        db.close()
     yield
+
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(router, prefix="/api")
