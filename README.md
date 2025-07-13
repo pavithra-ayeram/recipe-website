@@ -46,5 +46,6 @@ CookBook is a full-stack web application built with FastAPI that allows users to
 4. Test backend routes via `/docs` (Swagger UI).
 
 ## Conclusion
-CookBook simplifies recipe exploration with a clean UI and powerful backend filtering. It is ideal for foodies and developers alike.  
+CookBook simplifies recipe exploration with a clean UI and powerful backend filtering. It is ideal for foodies and developers alike. 
+
 Live demo: [https://recipe-website-516y.onrender.com/](https://recipe-website-516y.onrender.com/)
